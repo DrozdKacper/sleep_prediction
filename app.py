@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 import joblib
-
+from fastapi.staticfiles import StaticFiles
 # -------------------------
 # 1. Wczytanie modelu (pipeline + label encoding w środku)
 # -------------------------
@@ -62,3 +62,6 @@ def predict_sleep_disorder(data: SleepData):
     pred_label_py = str(pred_label[0])
 
     return {"predicted_sleep_disorder": pred_label_py}
+
+
+app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
