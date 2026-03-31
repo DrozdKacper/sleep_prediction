@@ -1,12 +1,15 @@
+Poniżej masz kompletny kod FastAPI z ręcznym mapowaniem klas, który od razu zwraca nazwy ("None", "Insomnia", "Sleep Apnea") zamiast 0/1/2:
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
 import joblib
+from fastapi.staticfiles import StaticFiles
 
 # -------------------------
-# 1. Wczytanie modelu (pipeline + label encoding w środku)
+# 1. Wczytanie modelu (pipeline + preprocessing)
 # -------------------------
-model = joblib.load("models/xgboost_pipeline.pkl")  # Twój zapisany pipeline
+model = joblib.load("xgboost_pipeline.pkl")  # Twój zapisany pipeline
 
 # -------------------------
 # 2. FastAPI app
@@ -39,10 +42,32 @@ class SleepData(BaseModel):
 # -------------------------
 @app.post("/predict")
 def predict_sleep_disorder(data: SleepData):
-    # zamiana danych na DataFrame
-    input_df = pd.DataFrame([data.dict()])
+    # Zamiana Pydantic -> nazwy kolumn ze spacją
+    input_dict = data.dict()
+    mapping = {
+        "Sleep_Duration": "Sleep Duration",
+        "Physical_Activity_Level": "Physical Activity Level",
+        "Stress_Level": "Stress Level",
+        "BMI_Category": "BMI Category",
+        "Heart_Rate": "Heart Rate",
+        "Daily_Steps": "Daily Steps"
+    }
+    for k, v in mapping.items():
+        input_dict[v] = input_dict.pop(k)
+    
+    # Zamiana danych na DataFrame
+    input_df = pd.DataFrame([input_dict])
 
-    # predykcja (pipeline zwraca już oryginalne etykiety)
-    pred_label = model.predict(input_df)
+    # Predykcja (pipeline zwraca liczby 0,1,2)
+    pred_label_encoded = model.predict(input_df)
 
-    return {"predicted_sleep_disorder": pred_label[0]}
+    # Ręczne mapowanie klas
+    label_map = {0: "None", 1: "Insomnia", 2: "Sleep Apnea"}
+    pred_label_name = label_map[pred_label_encoded[0]]
+
+    return {"predicted_sleep_disorder": pred_label_name}
+
+# -------------------------
+# 5. Mount frontend (opcjonalnie)
+# -------------------------
+app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
