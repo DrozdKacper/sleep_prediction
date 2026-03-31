@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pandas as pd
@@ -67,6 +66,6 @@ def predict_sleep_disorder(data: SleepData):
     return {"predicted_sleep_disorder": pred_label_name}
 
 # -------------------------
-# 5. Mount frontend (opcjonalnie)
+# 5. Mount frontend na /static
 # -------------------------
-app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
+app.mount("/static", StaticFiles(directory=".", html=True), name="frontend")
