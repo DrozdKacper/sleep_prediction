@@ -1,4 +1,3 @@
-Poniżej masz kompletny kod FastAPI z ręcznym mapowaniem klas, który od razu zwraca nazwy ("None", "Insomnia", "Sleep Apnea") zamiast 0/1/2:
 
 from fastapi import FastAPI
 from pydantic import BaseModel
