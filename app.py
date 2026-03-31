@@ -5,7 +5,7 @@ import joblib
 from fastapi.staticfiles import StaticFiles
 
 # -------------------------
-# 1. Wczytanie modelu (pipeline + preprocessing)
+# 1. Wczytanie modelu (pipeline + label encoding w środku)
 # -------------------------
 model = joblib.load("xgboost_pipeline.pkl")  # Twój zapisany pipeline
 
@@ -56,16 +56,15 @@ def predict_sleep_disorder(data: SleepData):
     # Zamiana danych na DataFrame
     input_df = pd.DataFrame([input_dict])
 
-    # Predykcja (pipeline zwraca liczby 0,1,2)
-    pred_label_encoded = model.predict(input_df)
+    # Predykcja (pipeline zwraca już oryginalne etykiety)
+    pred_label = model.predict(input_df)
 
-    # Ręczne mapowanie klas
-    label_map = {0: "None", 1: "Insomnia", 2: "Sleep Apnea"}
-    pred_label_name = label_map[pred_label_encoded[0]]
+    # Konwersja predykcji na string, żeby JSON przeszedł poprawnie
+    pred_label_py = str(pred_label[0])
 
-    return {"predicted_sleep_disorder": pred_label_name}
+    return {"predicted_sleep_disorder": pred_label_py}
 
 # -------------------------
-# 5. Mount frontend na /static
+# 5. Mount frontend (opcjonalnie)
 # -------------------------
-app.mount("/static", StaticFiles(directory=".", html=True), name="frontend")
+app.mount("/", StaticFiles(directory=".", html=True), name="frontend")
