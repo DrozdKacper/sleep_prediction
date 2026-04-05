@@ -13,7 +13,7 @@ This project presents an end-to-end machine learning system that predicts sleep 
 - Detect sleep disorders early (Insomnia, Sleep Apnea, None)
 - Identify key risk factors affecting sleep health
 - Provide a decision-support tool for preventive action
-- Deliver predictions via a production-ready API
+- Provide real-time predictions through a cloud-deployed machine learning API
 
 ---
 
@@ -22,8 +22,8 @@ This project presents an end-to-end machine learning system that predicts sleep 
 - Exploratory Data Analysis with actionable insights
 - Model comparison and hyperparameter tuning
 - Model interpretability (SHAP, feature importance)
-- REST API with FastAPI
-- Deployment on Render (live inference)
+- REST API for real-time predictions
+- Cloud deployment of a production-ready ML system
 
 ---
 
@@ -114,6 +114,7 @@ This project presents an end-to-end machine learning system that predicts sleep 
 ---
 
 ## API and Deployment
-- FastAPI used to expose prediction endpoint
-- Real-time predictions from user input
-- Deployed on Render
+- Built a REST API using FastAPI for real-time predictions
+- Deployed the machine learning model in the cloud
+- Hosted the service using Render
+- Enabled end-to-end inference pipeline from user input to prediction
