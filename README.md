@@ -66,7 +66,7 @@ This project presents an end-to-end machine learning system that predicts sleep 
 - SVM
 - K-Nearest Neighbors
 
-### Best Results (after tuning)
+### Best Results (After Hyperparameter Tuning)
 
 | Model | Accuracy | Macro F1 |
 |------|--------|---------|
